@@ -1,54 +1,55 @@
 use v6;
-
+#use Grammar::Debugger;
 # RFC: https://tools.ietf.org/html/rfc6838
 
 grammar IETF::RFC_Grammar::MediaType {
     token TOP {
-        ^ <type-name> '/' <tree>? <subtype-name> [<suffix>]? \s* <params>? $
-    };
+        ^ <type-name> '/' <tree>? <subtype-name> <suffix>? .* $
+        #<type-name>? '/' <tree>? <subtype-name>? [<suffix>]? \s* <parameters>?
+    }
 
     token type-name {
         <restricted-name>
-    };
-    token subtype-name {
-        <restricted-name> <after [<tree>.]>
-    };
+    }
 
     token tree {
-        <facet> [.<producer>]*
-    };
+        <facet> <producer>+ <before <subtype-name>>
+    }
     token facet {
-        <restricted-name-chars>+ [<after '/'> && <before '.'>]
-    };
+        <restricted-name> '.' # [<after '/'> && <before '.'>]
+    }
     token producer {
-        <restricted-name-chars>+ <before [.<subtype-name>]>
-    };
+        <restricted-name> '.' # [<after '.'> && <before '.'>]
+    }
+
+    token subtype-name {
+        <restricted-name> 
+    }
 
     token suffix {
-        <alnum>+ <after <subtype-name> '+'>
-    };
-
+        '+' <alnum>+
+    }
 
     token parameters {
         [\; \s* <param-name> '=' \"? <param-value>]*
-    };
+    }
     token param-name {
         ^^ <alnum>+ <after [\s\"\;]+>
-    };
+    }
     token param-value {
         <-[\s\"\;]>+
-    };
+    }
 
 
     token restricted-name {
         <restricted-name-first>
         <restricted-name-chars> ** 0..126
-    };
+    }
     token restricted-name-first {
-        ^^ <alnum>
-    };
+        <alnum>
+    }
     token restricted-name-chars {
-        <alnum>+
+        <alnum>
         # <[ <alnum>+[!#$&-^_]-[+.] ]>
-    };
+    }
 }

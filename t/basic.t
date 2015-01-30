@@ -4,6 +4,7 @@ plan 13;
 
 use MediaType;
 
+# 13 test cases
 my %valid = %(
     'image/svg+xml'=> %(
         type-name => 'image',
@@ -34,8 +35,9 @@ my %valid = %(
 
 for %valid.kv -> $content-type, %expected {
     my $mt = parse($content-type);
+
     for %expected.kv -> $key, $value {
-        is $mt{$key}, $value, $content-type;
+        is %valid.{$content-type}.{$key}, $value, "[$content-type] $key = $value";
     }
 }
 
