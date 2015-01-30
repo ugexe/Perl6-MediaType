@@ -1,5 +1,5 @@
-use v6;
-#use Grammar::Debugger;
+﻿use v6;
+# use Grammar::Debugger;
 # RFC: https://tools.ietf.org/html/rfc6838
 
 grammar IETF::RFC_Grammar::MediaType {
@@ -11,23 +11,35 @@ grammar IETF::RFC_Grammar::MediaType {
     token type-name {
         <restricted-name>
     }
-
-    token tree {
-        <facet> <producer>+ <before <subtype-name>>
-    }
-    token facet {
-        <restricted-name> '.' # [<after '/'> && <before '.'>]
-    }
-    token producer {
-        <restricted-name> '.' # [<after '.'> && <before '.'>]
-    }
-
     token subtype-name {
         <restricted-name> 
     }
 
+    # token tree {
+    #     vnd.oasis.opendocument.text
+    #     vnd     | oasis | opendocument  | text
+    #     <facet>   [<producer>+ % '.']     ['.' <subtype-name>]
+    # }
+    token tree {
+        <facet> '.' [<producer> '.']+
+    }
+    proto token facet {*}
+    token facet:sym<vnd> {
+        <sym>
+    }
+    token facet:sym<prs> {
+        <sym>
+    }
+    token facet:sym<x> {
+        # x can be followed by either '.' or '-'
+        <sym>
+    }
+    token producer {
+        <restricted-name> #'.' # [<after '.'> && <before '.'>]
+    }
+
     token suffix {
-        '+' <alnum>+
+        <alnum>+ <after '+'>
     }
 
     token parameters {
@@ -43,13 +55,13 @@ grammar IETF::RFC_Grammar::MediaType {
 
     token restricted-name {
         <restricted-name-first>
-        <restricted-name-chars> ** 0..126
+        <restricted-name-chars> # 0..127
     }
     token restricted-name-first {
         <alnum>
     }
     token restricted-name-chars {
-        <alnum>
+        <alnum>+
         # <[ <alnum>+[!#$&-^_]-[+.] ]>
     }
 }
