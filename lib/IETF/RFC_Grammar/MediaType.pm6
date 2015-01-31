@@ -1,52 +1,47 @@
 ﻿use v6;
-# use Grammar::Debugger;
+#use Grammar::Debugger;
 # RFC: https://tools.ietf.org/html/rfc6838
 
 grammar IETF::RFC_Grammar::MediaType {
     token TOP {
-        ^ <type-name> '/' <tree>? <subtype-name> <suffix>? .* $
+        ^ <type> '/' <tree>? <subtype> ['+' <suffix>]? .* $
         #<type-name>? '/' <tree>? <subtype-name>? [<suffix>]? \s* <parameters>?
     }
 
-    token type-name {
+    token type {
         <restricted-name>
     }
-    token subtype-name {
+    token subtype {
         <restricted-name> 
     }
 
-    # token tree {
-    #     vnd.oasis.opendocument.text
-    #     vnd     | oasis | opendocument  | text
-    #     <facet>   [<producer>+ % '.']     ['.' <subtype-name>]
-    # }
     token tree {
-        <facet> '.' [<producer> '.']+
+        <facet> '.' [<branch> '.']+ <before <subtype>>
     }
     proto token facet {*}
     token facet:sym<vnd> {
-        <sym>
+        <sym> <before '.'>
     }
     token facet:sym<prs> {
-        <sym>
+        <sym> <before '.'>
     }
     token facet:sym<x> {
         # x can be followed by either '.' or '-'
-        <sym>
+        <sym> <before ['.' | '-']>
     }
-    token producer {
-        <restricted-name> #'.' # [<after '.'> && <before '.'>]
+    token branch {
+        <restricted-name>
     }
 
     token suffix {
-        <alnum>+ <after '+'>
+        <alnum>+
     }
 
     token parameters {
         [\; \s* <param-name> '=' \"? <param-value>]*
     }
     token param-name {
-        ^^ <alnum>+ <after [\s\"\;]+>
+        <alnum>+ <after [\s\"\;]+>
     }
     token param-value {
         <-[\s\"\;]>+
@@ -54,14 +49,10 @@ grammar IETF::RFC_Grammar::MediaType {
 
 
     token restricted-name {
-        <restricted-name-first>
-        <restricted-name-chars> # 0..127
-    }
-    token restricted-name-first {
         <alnum>
+        <restricted-chars> ** 0..127
     }
-    token restricted-name-chars {
-        <alnum>+
-        # <[ <alnum>+[!#$&-^_]-[+.] ]>
+    token restricted-chars {
+        <+alnum +[!#$&^_-]> # <-[\.\+]> not explicitly needed
     }
 }
