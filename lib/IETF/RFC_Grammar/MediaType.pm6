@@ -55,7 +55,8 @@ grammar IETF::RFC_Grammar::MediaType {
         <restricted-chars> ** 0..127
     }
     token restricted-chars {
-        <+alnum +[!#$&^_-]> # <-[\.\+]> not explicitly needed
+        # '.' is used in name: "Wordperfect5.1" and may need to be handled correctly
+        <+alnum +[!#$&^_-] -[.+]>
     }
 }
 
@@ -63,13 +64,13 @@ grammar IETF::RFC_Grammar::MediaType {
 # for only allowing registered types
 grammar IETF::RFC_Grammar::MediaType::StrictType is IETF::RFC_Grammar::MediaType {
     proto token type {*}
-    token type:sym<application> { <sym> }
-    token type:sym<audio>       { <sym> }
-    token type:sym<example>     { <sym> }
-    token type:sym<image>       { <sym> }
-    token type:sym<message>     { <sym> }
-    token type:sym<model>       { <sym> }
-    token type:sym<multipart>   { <sym> }
-    token type:sym<text>        { <sym> }
-    token type:sym<video>       { <sym> }
+    token type:sym<application/> { <sym> }
+    token type:sym<audio/>       { <sym> }
+    token type:sym<example/>     { <sym> }
+    token type:sym<image/>       { <sym> }
+    token type:sym<message/>     { <sym> }
+    token type:sym<model/>       { <sym> }
+    token type:sym<multipart/>   { <sym> }
+    token type:sym<text/>        { <sym> }
+    token type:sym<video/>       { <sym> }
 }
