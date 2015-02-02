@@ -4,13 +4,11 @@
 
 grammar IETF::RFC_Grammar::MediaType {
     token TOP {
-        ^ <type> '/' <tree>? <subtype> ['+' <suffix>]? .* $ 
+        ^ <type> '/' <tree>? <subtype> ['+' <suffix>]? <params>? .* $ 
     }
 
     # main type
-    token type {
-        <restricted-name>
-    }
+    token type { <restricted-name> }
 
     # optional: tree
     token tree             { <facet> <facet-sep> [<branch> '.']* }
@@ -19,26 +17,32 @@ grammar IETF::RFC_Grammar::MediaType {
     token facet:sym<prs>   { <after <!alnum>> <sym> <before '.'>         }
     token facet:sym<x>     { <after <!alnum>> <sym> <before ['.' | '-']> }
     proto token facet-sep  {*} # try to make 'token tree' less ugly with 'x-'
-    token facet-sep:sym<-> { <after x> <sym> <before [<branch> | <subtype>]>       }
-    token facet-sep:sym<.> { <sym> <before [<branch> | <subtype>]> }
-    token branch           { <restricted-name> <before '.'> }
+    token facet-sep:sym<-> { <after x> <sym> <before [<branch> | <subtype>]> }
+    token facet-sep:sym<.> { <sym> <before [<branch> | <subtype>]>           }
+    token branch           { <restricted-name> <before '.'> } 
 
     # subtype
-    token subtype {
-        <restricted-name> 
-    }
+    token subtype { <restricted-name> }
 
     # optional: suffix
-    token suffix {
-        <after [<subtype> '+']> <alnum>+
-    }
+    token suffix { <after [<subtype> '+']> <alnum>+ }
 
     # optional: parameters
-    #token parameters {
-        #[\; \s* <param-name> '=' [<param-value>+ %% \' | <param-value>+ %% \" | <param-value>+]  ]*
-    #}
-    token param-name  { <after [\s\"\;]+> <alnum>+ }
-    token param-value { <-[\s\"\;]>+ }
+    token params {
+        [
+        <param-name> 
+        '=' 
+        [\' | \"]? 
+            [
+            | <param-value>+ %% \' 
+            | <param-value>+ %% \" 
+            | <param-value>+
+            ] 
+        [\' | \"]?
+        ]+
+    }
+    token param-name  { <alnum>+ <before '='> }
+    token param-value { <after '='> <alnum>+ }
 
     # valid characters
     token restricted-name  { <+alnum -[\-\_]> <restricted-chars> ** 0..127 }
@@ -47,7 +51,7 @@ grammar IETF::RFC_Grammar::MediaType {
 
 
 # for only allowing registered types
-grammar IETF::RFC_Grammar::MediaType::StrictType is IETF::RFC_Grammar::MediaType {
+grammar IETF::RFC_Grammar::MediaType::Type::Strict is IETF::RFC_Grammar::MediaType {
     proto token type {*}
     token type:sym<application/> { <sym> }
     token type:sym<audio/>       { <sym> }

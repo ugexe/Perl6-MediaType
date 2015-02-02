@@ -1,6 +1,6 @@
 use v6;
 use Test;
-plan 9;
+plan 10;
 use MediaType;
 
 # XXX: TODO
@@ -173,7 +173,25 @@ subtest {
 }
 
 
-# 8) test x. tree with no branches and dashes in subtype name
+# 8) test type name with dash and no tree no suffix
+{
+    my $str = 'application/font-woff';
+    subtest {
+        my $parsed = parse($str);
+
+        is $parsed.<type>, 'application',      
+            'type: application';
+
+        is $parsed.<subtype>,'font-woff', 
+            'subtype: font-woff';
+
+        nok $parsed.<tree>,   'no tree';
+        nok $parsed.<suffix>, 'no suffix';
+    }, $str;
+}
+
+
+# 9) test x. tree with no branches and dashes in subtype name
 {
     my $str = 'application/x.font-woff';
     subtest {
@@ -193,7 +211,7 @@ subtest {
 }
 
 
-# 9) test with params (params not parsed out yet)
+# 10) test with params (params not parsed out yet)
 {
     my $str = 'video/mp4 codecs="avc1.640028"';
     subtest {
