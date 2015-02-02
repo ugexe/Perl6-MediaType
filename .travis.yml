@@ -9,7 +9,10 @@ before_install:
 - rakudobrew triple
 - dir
 - ls
+- panda install HTTP::UserAgent IO::Socket::SSL --notests
 before_script:
+- dir
+- ls
 - panda list --installed --verbose
 script:
 - prove -v -e "perl6 --ll-exception -Ilib" t/
