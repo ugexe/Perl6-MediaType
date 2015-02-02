@@ -12,10 +12,9 @@ before_install:
 - rakudobrew build-panda
 - dir
 - ls
-- panda install HTTP::UserAgent --notests
 before_script:
-- dir
-- ls
 - panda list --installed --verbose
+install:
+- panda install HTTP::UserAgent --notests
 script:
 - prove -v -e "perl6 --ll-exception -Ilib" t/
