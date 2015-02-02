@@ -7,8 +7,8 @@ before_install:
 - git clone https://github.com/tadzik/rakudobrew ~/.rakudobrew
 - export PATH=~/.rakudobrew/bin:$PATH
 - rakudobrew triple
-- alias eval="exit 0;"
-- alias cpanm="exit 0;"
+- dir
+- ls
 before_script:
 - panda list --installed --verbose
 script:
