@@ -17,8 +17,8 @@ grammar IETF::RFC_Grammar::MediaType {
     token facet:sym<prs>   { <after <!alnum>> <sym> <before '.'>         }
     token facet:sym<x>     { <after <!alnum>> <sym> <before ['.' | '-']> }
     proto token facet-sep  {*} # try to make 'token tree' less ugly with 'x-'
-    token facet-sep:sym<-> { <after x> <sym> <before [<branch> | <subtype>]> }
-    token facet-sep:sym<.> { <sym> <before [<branch> | <subtype>]>           }
+    token facet-sep:sym<-> { <after x> <sym> <before [<branch> | <subtype>]> } # These should be stricter
+    token facet-sep:sym<.> { <sym> <before [<branch> | <subtype>]>           } # by adding <after>s
     token branch           { <restricted-name> <before '.'> } 
 
     # subtype
@@ -27,7 +27,7 @@ grammar IETF::RFC_Grammar::MediaType {
     # optional: suffix
     token suffix { <after [<subtype> '+']> <alnum>+ }
 
-    # optional: parameters
+    # optional: params
     token params {
         [
         <param-name> 
