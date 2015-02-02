@@ -7,7 +7,6 @@ before_install:
 - git clone https://github.com/tadzik/rakudobrew ~/.rakudobrew
 - export PATH=~/.rakudobrew/bin:$PATH
 - rakudobrew triple
-- perl6 -v
 before_script:
 - panda list --installed --verbose
 script:
