@@ -1,11 +1,17 @@
 use v6;
 use Test;
-plan 13;
+plan 18;
 my $DEBUG = 0;
 use MediaType;
 
 # commented out missing functionalty tests
 my %valid = %(
+    'example/x-deprecated.branch1.branch2.rn-realaudio' => %(
+        type    => 'example',
+        # facet   => 'x',
+        tree    => 'x-deprecated.branch1.branch2.',
+        subtype => 'rn-realaudio'
+    ),    
     'image/svg+xml' => %(
         type    => 'image',
         subtype => 'svg',
@@ -17,11 +23,19 @@ my %valid = %(
         tree    => 'vnd.oasis.opendocument.',
         subtype => 'text'
     ),    
-    'application/x.oasis.opendocument.text' => %(
-        type    => 'application',
+    'example/x-deprecated' => %(
+        type    => 'example',
         # facet   => 'x',
-        tree    => 'x.oasis.opendocument.',
-        subtype => 'text'
+        subtype => 'x-deprecated'
+    ),
+    'text/vnd.abc+xml; charset=utf-8' => %(
+        type    => 'text',
+        subtype => 'abc',
+        tree    => 'vnd.',
+        suffix  => 'xml',
+        # params  => [
+        #     'charset' => 'utf-8'
+        # ]
     ),
     'text/plain; charset=utf-8' => %(
         type    => 'text',
@@ -30,13 +44,18 @@ my %valid = %(
         #     'charset' => 'utf-8'
         # ]
     ),
-    'video/mp4; codecs="avc1.640028"' => %(
+    'video/mp4 codecs="avc1.640028"' => %(
         type    => 'video',
         subtype => 'mp4',
         # params  => [
         #     'codecs' => 'avc1.640028'
         # ]
-    )
+    ),
+    'application/x-font-woff' => %(
+        type    => 'application',
+        subtype => 'x-font-woff',
+    ),
+
 );
 
 for %valid.kv -> $content-type, %expected {

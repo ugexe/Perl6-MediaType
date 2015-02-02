@@ -1,47 +1,52 @@
 ﻿use v6;
-#use Grammar::Debugger;
+ # use Grammar::Debugger;
 # RFC: https://tools.ietf.org/html/rfc6838
 
 grammar IETF::RFC_Grammar::MediaType {
     token TOP {
-        ^ <type> '/' <tree>? <subtype> ['+' <suffix>]? .* $
-        #<type-name>? '/' <tree>? <subtype-name>? [<suffix>]? \s* <parameters>?
+        ^ <type> '/' <tree>? <subtype> ['+' <suffix>]? .* $ 
     }
 
+    # main type
     token type {
         <restricted-name>
     }
+
+    # optional: tree
+    token tree {
+        [<facet> <.facet-sep>] [<branch> '.']*
+    }
+    proto token facet {*}
+    token facet:sym<vnd> {
+        <sym> <before '.'>
+    }
+    token facet:sym<prs> {
+        <sym> <before '.'>
+    }
+    token facet:sym<x> {
+        <sym> [<before '.'> || <before '-'>]
+    }
+    token  facet-sep {
+        [['-' <after x>] || '.']
+    }
+    token branch {
+        <restricted-name> #<before [[<branch> '.'] || <.subtype>]>
+    }
+
+    # subtype
     token subtype {
         <restricted-name> 
     }
 
-    token tree {
-        <facet> <branches>? <before <subtype>>
-    }
-    proto token facet {*}
-    token facet:sym<vnd.> {
-        <sym>
-    }
-    token facet:sym<prs.> {
-        <sym>
-    }
-    token facet:sym<x.> {
-        <sym>
-    }
-    token branches {
-        [<branch> '.']+
-    }
-    token branch {
-        <restricted-name>
-    }
-
+    # optional: suffix
     token suffix {
-        <alnum>+
+        <alnum>+ <after [<subtype> '+']>
     }
 
-    token parameters {
-        [\; \s* <param-name> '=' [<param-value>+ %% \' | <param-value>+ %% \" | <param-value>+]  ]*
-    }
+    # optional: parameters
+    #token parameters {
+        #[\; \s* <param-name> '=' [<param-value>+ %% \' | <param-value>+ %% \" | <param-value>+]  ]*
+    #}
     token param-name {
         <alnum>+ <after [\s\"\;]+>
     }
@@ -49,14 +54,14 @@ grammar IETF::RFC_Grammar::MediaType {
         <-[\s\"\;]>+
     }
 
-
+    # valid characters
     token restricted-name {
         <alnum>
         <restricted-chars> ** 0..127
     }
     token restricted-chars {
         # '.' is used in name: "Wordperfect5.1" and may need to be handled correctly
-        <+alnum +[!#$&^_-] -[.+]>
+        <+alnum +[!#$&^_-] -[\.\+]>
     }
 }
 
