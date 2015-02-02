@@ -9,7 +9,7 @@ before_install:
 - rakudobrew triple
 - dir
 - ls
-- panda install HTTP::UserAgent IO::Socket::SSL --notests
+- panda install HTTP::UserAgent --notests
 before_script:
 - dir
 - ls
