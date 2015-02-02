@@ -9,6 +9,9 @@ before_install:
 - rakudobrew triple
 - dir
 - ls
+- rakudobrew build-panda
+- dir
+- ls
 - panda install HTTP::UserAgent --notests
 before_script:
 - dir
