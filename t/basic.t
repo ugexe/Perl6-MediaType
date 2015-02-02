@@ -6,6 +6,11 @@ use MediaType;
 # XXX: TODO
 # 1.) '.' is used in name: "Wordperfect5.1" and may need to be handled correctly
 # 2.) test for sub matches like facet, individual branches
+# 3.) parse out parameters
+# 4.) tests from perl5 module Email::MIME::ContentType:
+#       'multipart/mixed; boundary=unique-boundary-1'
+#       'message/external-body; access-type=local-file; name="/u/nsb/Me.jpeg"'
+#       'multipart/mixed; boundary="----------=_1026452699-10321-0"'
 
 
 # 1) basic tests on valid/invalid strings
