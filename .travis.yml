@@ -18,7 +18,7 @@ before_install:
 - git clone https://github.com/tadzik/rakudobrew ~/.rakudobrew
 - export PATH=~/.rakudobrew/bin:$PATH
 - rakudobrew build $BACKEND
+install:
 - perl6 -v
-- rakudobrew build-panda
 script:
 - prove -v -e "perl6 --ll-exception -Ilib" t/
