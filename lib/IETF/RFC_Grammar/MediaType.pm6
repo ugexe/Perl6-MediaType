@@ -1,10 +1,9 @@
 ﻿use v6;
-# use Grammar::Tracer;
 # RFC: https://tools.ietf.org/html/rfc6838
 
 grammar IETF::RFC_Grammar::MediaType {
     token TOP {
-        ^ <type> '/' <tree>? <subtype> ['+' <suffix>]? <params>? .* $ 
+        ^ <type> '/' <tree>? <subtype> ['+' <suffix>]? [';' <params>]* $
     }
 
     # main type
@@ -27,22 +26,14 @@ grammar IETF::RFC_Grammar::MediaType {
     # optional: suffix
     token suffix { <after [<subtype> '+']> <alnum>+ }
 
-    # optional: parameters
+    # todo: https://tools.ietf.org/html/rfc2231
     token params {
-        [
-        <param-name> 
-        '=' 
-        [\' | \"]? 
-            [
-            | <param-value>+ %% \' 
-            | <param-value>+ %% \" 
-            | <param-value>+
-            ] 
-        [\' | \"]?
-        ]+
+        \s* <param-name> \s* <param-sep> \s* <param-values> \s*
     }
-    token param-name  { <alnum>+ <before '='> }
-    token param-value { <after '='> <alnum>+ }
+    token param-name   { <restricted-name> }
+    token param-values { [\' | \"]? <param-value> [',' \s* <param-value>]* [\' | \"]? }
+    token param-value  { <+alnum +[\.-]>+  }
+    token param-sep    { ['*' \d '*'?]? '=' }
 
     # valid characters
     token restricted-name  { <+alnum -[\-\_]> <restricted-chars> ** 0..127 }

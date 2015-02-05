@@ -1,6 +1,6 @@
 use v6;
 use Test;
-plan 10;
+plan 9;
 use MediaType;
 
 # XXX: TODO
@@ -58,16 +58,11 @@ subtest {
     subtest {
         my $parsed = parse($str);
 
-        is $parsed.<type>, 'example',      
-            'type: example';
+        is $parsed.<type>, 'example';
+        is $parsed.<subtype>,'rn-realaudio';
+        is $parsed.<tree>, 'x-deprecated.branch1.branch2.';
 
-        is $parsed.<subtype>,'rn-realaudio', 
-            'subtype: rn-realaudio';
-
-        is $parsed.<tree>, 'x-deprecated.branch1.branch2.',
-            'tree: x-deprecated.branch1.branch2.';
-
-        nok $parsed.<suffix>, 'no suffix';
+        nok $parsed.<suffix>;
     }, $str;
 }
 
@@ -78,17 +73,10 @@ subtest {
     subtest {
         my $parsed = parse($str);
 
-        is $parsed.<type>, 'text',      
-            'type: text';
-
-        is $parsed.<tree>, 'vnd.',
-            'tree: vnd.';
-
-        is $parsed.<subtype>,'abc', 
-            'subtype: abc';
-
-        is $parsed.<suffix>, 'xml', 
-            'suffix: xml';
+        is $parsed.<type>, 'text';
+        is $parsed.<tree>, 'vnd.';
+        is $parsed.<subtype>,'abc';
+        is $parsed.<suffix>, 'xml';
     }, $str;
 }
 
@@ -99,16 +87,11 @@ subtest {
     subtest {
         my $parsed = parse($str);
 
-        is $parsed.<type>, 'image',      
-            'type: image';
+        is $parsed.<type>, 'image';
+        is $parsed.<subtype>,'svg';
+        is $parsed.<suffix>, 'xml';
 
-        is $parsed.<subtype>,'svg', 
-            'subtype: svg';
-
-        is $parsed.<suffix>, 'xml', 
-            'suffix: xml';
-
-        nok $parsed.<tree>, 'no tree';
+        nok $parsed.<tree>;
     }, $str;
 }
 
@@ -119,16 +102,11 @@ subtest {
     subtest {
         my $parsed = parse($str);
 
-        is $parsed.<type>, 'application',      
-            'type: application';
+        is $parsed.<type>, 'application';
+        is $parsed.<tree>, 'vnd.oasis.opendocument.';
+        is $parsed.<subtype>,'text';
 
-        is $parsed.<tree>, 'vnd.oasis.opendocument.', 
-            'tree: vnd.oasis.opendocument.';
-
-        is $parsed.<subtype>,'text', 
-            'subtype: text';
-
-        nok $parsed.<suffix>, 'no suffix';
+        nok $parsed.<suffix>;
     }, $str;
 }
 
@@ -139,16 +117,11 @@ subtest {
     subtest {
         my $parsed = parse($str);
 
-        is $parsed.<type>, 'example',      
-            'type: example';
+        is $parsed.<type>, 'example';
+        is $parsed.<tree>, 'x-';
+        is $parsed.<subtype>,'deprecated';
 
-        is $parsed.<tree>, 'x-',
-            'tree: x-';
-
-        is $parsed.<subtype>,'deprecated', 
-            'subtype: deprecated';
-
-        nok $parsed.<suffix>, 'no suffix';
+        nok $parsed.<suffix>;
     }, $str;
 }
 
@@ -159,16 +132,11 @@ subtest {
     subtest {
         my $parsed = parse($str);
 
-        is $parsed.<type>, 'application',      
-            'type: application';
+        is $parsed.<type>, 'application';
+        is $parsed.<tree>, 'x-';
+        is $parsed.<subtype>,'font-woff';
 
-        is $parsed.<tree>, 'x-',
-            'tree: x-';
-
-        is $parsed.<subtype>,'font-woff', 
-            'subtype: font-woff';
-
-        nok $parsed.<suffix>, 'no suffix';
+        nok $parsed.<suffix>;
     }, $str;
 }
 
@@ -179,14 +147,11 @@ subtest {
     subtest {
         my $parsed = parse($str);
 
-        is $parsed.<type>, 'application',      
-            'type: application';
+        is $parsed.<type>, 'application';
+        is $parsed.<subtype>,'font-woff';
 
-        is $parsed.<subtype>,'font-woff', 
-            'subtype: font-woff';
-
-        nok $parsed.<tree>,   'no tree';
-        nok $parsed.<suffix>, 'no suffix';
+        nok $parsed.<tree>;
+        nok $parsed.<suffix>;
     }, $str;
 }
 
@@ -197,34 +162,11 @@ subtest {
     subtest {
         my $parsed = parse($str);
 
-        is $parsed.<type>, 'application',      
-            'type: application';
+        is $parsed.<type>, 'application';
+        is $parsed.<tree>, 'x.';
+        is $parsed.<subtype>,'font-woff';
 
-        is $parsed.<tree>, 'x.',
-            'tree: x.';
-
-        is $parsed.<subtype>,'font-woff', 
-            'subtype: font-woff';
-
-        nok $parsed.<suffix>, 'no suffix';
-    }, $str;
-}
-
-
-# 10) test with params (params not parsed out yet)
-{
-    my $str = 'video/mp4 codecs="avc1.640028"';
-    subtest {
-        my $parsed = parse($str);
-
-        is $parsed.<type>, 'video',      
-            'type: video';
-
-        is $parsed.<subtype>,'mp4', 
-            'subtype: mp4';
-
-        nok $parsed.<tree>,   'no tree';
-        nok $parsed.<suffix>, 'no suffix';
+        nok $parsed.<suffix>;
     }, $str;
 }
 
