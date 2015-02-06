@@ -19,7 +19,6 @@ use MediaType;
     }, $str;
 }
 
-
 # 2)
 {
     my $str = Q{video/3gpp2; codecs="sevc, s263"};
@@ -32,7 +31,6 @@ use MediaType;
         is $parsed.<params>.[0].<param-name>, 'codecs';
         is $parsed.<params>.[0].<param-values>.<param-value>.[0], 'sevc';
         is $parsed.<params>.[0].<param-values>.<param-value>.[1], 's263';
-
         nok $parsed.<tree>;
         nok $parsed.<suffix>;
     }, $str;

@@ -30,10 +30,15 @@ grammar IETF::RFC_Grammar::MediaType {
     token params {
         \s* <param-name> \s* <param-sep> \s* <param-values> \s*
     }
+
     token param-name   { <restricted-name> }
-    token param-values { [\' | \"]? <param-value> [',' \s* <param-value>]* [\' | \"]? }
-    token param-value  { <+alnum +[\.-]>+  }
-    token param-sep    { ['*' \d '*'?]? '=' }
+    token param-values { 
+        $<quote>=[\' | \"]? 
+        <param-value> [',' \s* <param-value>]* 
+        [<!after \\> $<quote>]? 
+    }
+    token param-value  { <+alnum +[\.\-\s] -[,]> + }
+    token param-sep    { [\* \d \*?]? '=' }
 
     # valid characters
     token restricted-name  { <+alnum -[\-\_]> <restricted-chars> ** 0..127 }
