@@ -1,18 +1,11 @@
 ﻿module MediaType;
 use IETF::RFC_Grammar::MediaType;
 
-# TODO: use Blob ?
-constant UTF_32_BE = Buf[uint32].new(0x00FE, 0x00FF);   # ISO-8859-1: ␀␀þÿ (␀ = ASCII null)
-constant UTF_32_LE = Buf[uint32].new(0xFF, 0xFE);       # ISO-8859-1: ÿþ␀␀
-constant UTF_16_BE = Buf[uint16].new(0xFE, 0xFF);       # ISO-8859-1: þÿ
-constant UTF_16_LE = Buf[uint16].new(0xFF, 0xFE);       # ISO-8859-1: ÿþ
-constant UTF_8     = Buf[uint8].new(0xEF, 0xBB, 0xBF);  # ISO-8859-1: ï»¿
-
 sub parse(Str $content-type) is export {
     IETF::RFC_Grammar::MediaType.parse($content-type);
 }
 
-sub sniff(Buf $data = $?FILE.IO.slurp(:bin).subbuf(0,512)) is export {
+sub sniff(Blob $data) is export {
     # first, try to run 'parse' to extract
     # Also treat these as unknown: 
     # unknown/unknown", "application/unknown", or "*/*
@@ -21,7 +14,16 @@ sub sniff(Buf $data = $?FILE.IO.slurp(:bin).subbuf(0,512)) is export {
 
     # bom should be ignored if the charset is given elsewhere
 
-    return check-bom($data)
+    # HTTP precedence
+    # The HTML5 specification was recently changed to say that the byte-order mark 
+    # should override any encoding declaration in the HTTP header when detecting the 
+    # encoding of an HTML page. This can be very useful when the author of the page 
+    # cannot control the character encoding setting of the server, or is unaware of 
+    # its effect, and the server is declaring pages to be in an encoding other than 
+    # UTF-8. If the BOM has a higher precedence than the HTTP headers, the page should 
+    # be correctly identified as UTF-8. 
+
+    return check-bom($data);
 }
 
 sub meta_from_html(Str $markup) is export {
@@ -30,17 +32,20 @@ sub meta_from_html(Str $markup) is export {
     }
 }
 
-sub check-bom($d) {
-    CATCH { when X::OutOfRange {  } }
+sub check-bom(Blob $data) {
+    given $data.subbuf(0,4).decode('latin-1') {
+        when /^ 'ÿþ␀␀'  / { return 'utf-32-le'     } # no test
+        when /^ '␀␀þÿ'  / { return 'utf-32-be'     } # no test
+        when /^ 'þÿ'   / { return 'utf-16-be'     }
+        when /^ 'ÿþ'   / { return 'utf-16-le'     }
+        when /^ 'ï»¿'  / { return 'utf-8'         }
+        when /^ '÷dL'  / { return 'utf-1'         } # no test
+        when /^ 'Ýsfs' / { return 'utf-ebcdic'    } # no test
+        when /^ '␎þÿ'   / { return 'scsu'          } # no test
+        when /^ 'ûî('  / { return 'bocu-1'        } # no test
+        when /^ '„1•3' / { return 'gb-18030'      } # test marked :todo
+        when /^ '+/v' <[89/+]> / { return 'utf-7' }
 
-    if $d.subbuf(0, 2)    eqv UTF_16_BE {       # ISO-8859-1: þÿ
-        return 'utf-16be';
-    }
-    elsif $d.subbuf(0, 2) eqv UTF_16_LE {       # ISO-8859-1: ÿþ
-        return 'utf-16le';
-    }
-    elsif $d.subbuf(0, 3) eqv UTF_8 { # ISO-8859-1: ï»¿
-        # not required by utf-8
-        return 'utf-8-strict';
+        default { return False }
     }
 }
