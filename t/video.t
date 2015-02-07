@@ -27,15 +27,15 @@ use MediaType;
 
         is $parsed.<type>, 'video';
         is $parsed.<subtype>,'3gpp2';
-        is $parsed.<params>.elems, 1;
-        is $parsed.<params>.[0].<param-name>, 'codecs';
-        is $parsed.<params>.[0].<param-values>.<param-value>.[0], 'sevc';
-        is $parsed.<params>.[0].<param-values>.<param-value>.[1], 's263';
+        is $parsed.<parameter>.elems, 1;
+        is $parsed.<parameter>.[0].<attribute>, 'codecs';
+        is $parsed.<parameter>.[0].<values>.<value>.[0], 'sevc';
+        is $parsed.<parameter>.[0].<values>.<value>.[1], 's263';
+
         nok $parsed.<tree>;
         nok $parsed.<suffix>;
     }, $str;
 }
-
 
 # 3)
 {
@@ -45,9 +45,9 @@ use MediaType;
 
         is $parsed.<type>, 'video';
         is $parsed.<subtype>,'3gpp2';
-        is $parsed.<params>.elems, 1;
-        is $parsed.<params>.[0].<param-name>, 'codecs';
-        is $parsed.<params>.[0].<param-values>.<param-value>.[0], 'mp4v.20.9';
+        is $parsed.<parameter>.elems, 1;
+        is $parsed.<parameter>.[0].<attribute>, 'codecs';
+        is $parsed.<parameter>.[0].<values>.<value>.[0], 'mp4v.20.9';
 
         nok $parsed.<tree>;
         nok $parsed.<suffix>;
@@ -63,10 +63,10 @@ use MediaType;
 
         is $parsed.<type>, 'video';
         is $parsed.<subtype>,'3gpp2';
-        is $parsed.<params>.elems, 1;
-        is $parsed.<params>.[0].<param-name>, 'codecs';
-        is $parsed.<params>.[0].<param-values>.<param-value>.[0], 'mp4v.20.9';
-        is $parsed.<params>.[0].<param-values>.<param-value>.[1], 'mp4a.E1';
+        is $parsed.<parameter>.elems, 1;
+        is $parsed.<parameter>.[0].<attribute>, 'codecs';
+        is $parsed.<parameter>.[0].<values>.<value>.[0], 'mp4v.20.9';
+        is $parsed.<parameter>.[0].<values>.<value>.[1], 'mp4a.E1';
         nok $parsed.<tree>;
         nok $parsed.<suffix>;
     }, $str;

@@ -17,7 +17,9 @@ MediaType
 
 =head1 Description
 
-Content-Type handler
+Determine or sniff MIME type information.
+
+L<http://tools.ietf.org/html/rfc2045>
 
 L<http://tools.ietf.org/html/rfc6838>
 

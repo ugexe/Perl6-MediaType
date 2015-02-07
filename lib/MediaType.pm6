@@ -1,28 +1,13 @@
 ﻿module MediaType;
-use IETF::RFC_Grammar::MediaType;
+use IETF::RFC_Grammar::RFC2045;
+
 
 sub parse(Str $content-type) is export {
-    IETF::RFC_Grammar::MediaType.parse($content-type);
+    IETF::RFC_Grammar::RFC2045.parse($content-type);
 }
 
+
 sub sniff(Blob $data) is export {
-    # first, try to run 'parse' to extract
-    # Also treat these as unknown: 
-    # unknown/unknown", "application/unknown", or "*/*
-
-    # xml is always utf-8 unless state
-
-    # bom should be ignored if the charset is given elsewhere
-
-    # HTTP precedence
-    # The HTML5 specification was recently changed to say that the byte-order mark 
-    # should override any encoding declaration in the HTTP header when detecting the 
-    # encoding of an HTML page. This can be very useful when the author of the page 
-    # cannot control the character encoding setting of the server, or is unaware of 
-    # its effect, and the server is declaring pages to be in an encoding other than 
-    # UTF-8. If the BOM has a higher precedence than the HTTP headers, the page should 
-    # be correctly identified as UTF-8. 
-
     return check-bom($data);
 }
 
