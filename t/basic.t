@@ -16,10 +16,10 @@ subtest {
     my $nok-str3 = 'text/.fakex-subtype';
 
     my ($ok-str-result, $nok-str1-result, $nok-str2-result, $nok-str3-result);
-    lives_ok { $ok-str-result   = parse($ok-str)   }
-    lives_ok { $nok-str1-result = parse($nok-str1) }
-    lives_ok { $nok-str2-result = parse($nok-str2) }
-    lives_ok { $nok-str3-result = parse($nok-str3) }
+    lives-ok { $ok-str-result   = parse($ok-str)   }
+    lives-ok { $nok-str1-result = parse($nok-str1) }
+    lives-ok { $nok-str2-result = parse($nok-str2) }
+    lives-ok { $nok-str3-result = parse($nok-str3) }
 
     subtest {
         ok $ok-str-result ~~ Match;
