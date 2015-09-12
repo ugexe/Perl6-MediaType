@@ -46,7 +46,3 @@ subtest {
     is sniff($gb18030), 'gb-18030', 'gb-18030';
 
 }, 'Byte Order Mark';
-
-
-
-done();
