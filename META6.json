@@ -1,11 +1,12 @@
 {
     "name"        : "MediaType",
     "version"     : "*",
+    "auth"        : "github:ugexe",
     "description" : "Determine or sniff MIME type information.",
     "depends"     : [ ],
     "provides"    : [
         "MediaType" : "lib/MediaType.pm6",
-        "IETF::RFC_Grammar::RFC2045" : "lib/IETF/RFC_Grammar/RFC2045.pm6"
+        "IETF::RFC_Grammar::RFC2045" : "lib/IETF/RFC_Grammar/RFC2045.pm6",
         "IETF::RFC_Grammar::RFC6838" : "lib/IETF/RFC_Grammar/RFC6838.pm6"
     ],
     "source-url"    : "git://github.com/ugexe/Perl6-MediaType.git"
