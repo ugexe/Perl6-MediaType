@@ -169,6 +169,3 @@ subtest {
         nok $parsed.<suffix>;
     }, $str;
 }
-
-
-done();
