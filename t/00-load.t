@@ -7,5 +7,3 @@ subtest {
     lives-ok { use IETF::RFC_Grammar::RFC6838 };
     lives-ok { use MediaType };
 }, "Sanity tests";
-
-done();
