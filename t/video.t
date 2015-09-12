@@ -71,6 +71,3 @@ use MediaType;
         nok $parsed.<suffix>;
     }, $str;
 }
-
-
-done();
